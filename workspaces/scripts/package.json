@@ -2,6 +2,9 @@
   "name": "@wsh-2024/scripts",
   "private": true,
   "devDependencies": {
+    "globby": "14.0.1",
+    "image-js": "0.35.5",
+    "sharp": "0.33.2",
     "tsx": "4.7.1"
   }
 }

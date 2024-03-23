@@ -30,7 +30,7 @@ const _ImgWrapper = styled.div`
 `;
 
 type Props = {
-  book: Unpacked<GetBookListResponse>;
+  book: Pick<Unpacked<GetBookListResponse>, 'id' | 'name' | 'description' | 'image'>;
 };
 
 export const BookListItem: React.FC<Props> = ({ book }) => {
