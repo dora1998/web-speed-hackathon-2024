@@ -9,7 +9,6 @@ import { Link } from '../../../foundation/components/Link';
 import { Separator } from '../../../foundation/components/Separator';
 import { Spacer } from '../../../foundation/components/Spacer';
 import { Text } from '../../../foundation/components/Text';
-import { useImage } from '../../../foundation/hooks/useImage';
 import { Color, Radius, Space, Typography } from '../../../foundation/styles/variables';
 import type { Unpacked } from '../../../lib/types';
 
@@ -34,7 +33,7 @@ type Props = {
 };
 
 export const BookListItem: React.FC<Props> = ({ book }) => {
-  const imageUrl = useImage({ height: 64, imageId: book.image.id, width: 64 });
+  const imageUrl = `/images/${book.image.id}_book.avif`;
 
   return (
     <_Wrapper>

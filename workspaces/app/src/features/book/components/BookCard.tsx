@@ -7,7 +7,6 @@ import { Flex } from '../../../foundation/components/Flex';
 import { Image } from '../../../foundation/components/Image';
 import { Link } from '../../../foundation/components/Link';
 import { Text } from '../../../foundation/components/Text';
-import { useImage } from '../../../foundation/hooks/useImage';
 import { Color, Radius, Space, Typography } from '../../../foundation/styles/variables';
 import { useBook } from '../hooks/useBook';
 
@@ -41,7 +40,7 @@ type Props = {
 const BookCard: React.FC<Props> = ({ bookId }) => {
   const { data: book } = useBook({ params: { bookId } });
 
-  const imageUrl = useImage({ height: 128, imageId: book.image.id, width: 192 });
+  const imageUrl = `/images/${book.image.id}_book_192w.avif`;
   const authorImageUrl = `/images/${book.author.image.id}.avif`;
 
   return (

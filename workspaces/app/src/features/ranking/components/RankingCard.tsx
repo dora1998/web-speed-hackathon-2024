@@ -10,7 +10,6 @@ import { Link } from '../../../foundation/components/Link';
 import { Separator } from '../../../foundation/components/Separator';
 import { Spacer } from '../../../foundation/components/Spacer';
 import { Text } from '../../../foundation/components/Text';
-import { useImage } from '../../../foundation/hooks/useImage';
 import { Color, Radius, Space, Typography } from '../../../foundation/styles/variables';
 import type { Unpacked } from '../../../lib/types';
 
@@ -43,7 +42,7 @@ type Props = {
 };
 
 const RankingCard: React.FC<Props> = ({ book }) => {
-  const imageUrl = useImage({ height: 96, imageId: book.image.id, width: 96 });
+  const imageUrl = `/images/${book.image.id}_book_96w.avif`;
   const authorImageUrl = `/images/${book.author.image.id}.avif`;
 
   return (

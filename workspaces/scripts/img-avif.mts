@@ -7,6 +7,7 @@ import { Image } from 'image-js';
 import sharp from 'sharp';
 
 import authors from '../server/seeds/author.json';
+import books from '../server/seeds/book.json';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -58,17 +59,44 @@ const convert = async (imageId: string, suffix: string, size: { height: number; 
   fs.writeFile(path.join(IMAGE_DIR, `${imageId}${suffix}.avif`), res);
 };
 
+console.log('----- Author -----');
+
 await Promise.all(
-  authors.map(async (author) => {
-    console.log(`Converting ${author.imageId}...`);
-    await convert(author.imageId, '', {
+  Array.from(new Set(authors.map((a) => a.imageId))).map(async (imageId) => {
+    console.log(`Converting ${imageId}...`);
+    await convert(imageId, '', {
       height: 32 * 3,
       width: 32 * 3,
     });
-    await convert(author.imageId, '_large', {
+    await convert(imageId, '_large', {
       height: 128 * 3,
       width: 128 * 3,
     });
-    console.log(`Converted ${author.imageId}!`);
+    console.log(`Converted ${imageId}!`);
+  }),
+);
+
+console.log('----- Book -----');
+
+await Promise.all(
+  Array.from(new Set(books.map((b) => b.imageId))).map(async (imageId) => {
+    console.log(`Converting ${imageId}...`);
+    await convert(imageId, '_book', {
+      height: 64 * 3,
+      width: 64 * 3,
+    });
+    await convert(imageId, '_book_96w', {
+      height: 96 * 3,
+      width: 96 * 3,
+    });
+    await convert(imageId, '_book_192w', {
+      height: 128 * 3,
+      width: 192 * 3,
+    });
+    await convert(imageId, '_book_256h', {
+      height: 256 * 3,
+      width: 192 * 3,
+    });
+    console.log(`Converted ${imageId}!`);
   }),
 );
