@@ -6,7 +6,8 @@
     "build:clean": "rm -rf ./dist",
     "build:copy": "cp -r ./seeds/images ./dist/images",
     "build:tsup": "tsup",
-    "start": "node ./dist/server.js"
+    "start": "node ./dist/server.js",
+    "start:inspect": "node --inspect ./dist/server.js"
   },
   "dependencies": {
     "@hapi/accept": "6.0.3",
@@ -14,7 +15,6 @@
     "@hono/swagger-ui": "0.2.1",
     "@hono/zod-openapi": "0.9.8",
     "@hono/zod-validator": "0.2.0",
-    "@jsquash/jxl": "1.1.0",
     "@koozaki/romaji-conv": "2.0.27",
     "@node-kit/pnpm-workspace-root": "3.2.0",
     "@oneidentity/zstd-js": "1.0.3",

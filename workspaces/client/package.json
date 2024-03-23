@@ -8,7 +8,6 @@
     "build:tsup": "tsup"
   },
   "dependencies": {
-    "@jsquash/jxl": "1.1.0",
     "@webcomponents/webcomponentsjs": "2.8.0",
     "@wsh-2024/admin": "workspace:*",
     "@wsh-2024/app": "workspace:*",
