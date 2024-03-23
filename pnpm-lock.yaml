@@ -190,9 +190,6 @@ importers:
 
   workspaces/client:
     dependencies:
-      '@jsquash/jxl':
-        specifier: 1.1.0
-        version: 1.1.0
       '@webcomponents/webcomponentsjs':
         specifier: 2.8.0
         version: 2.8.0
@@ -353,9 +350,6 @@ importers:
       '@hono/zod-validator':
         specifier: 0.2.0
         version: 0.2.0(hono@4.1.0)(zod@3.22.4)
-      '@jsquash/jxl':
-        specifier: 1.1.0
-        version: 1.1.0
       '@koozaki/romaji-conv':
         specifier: 2.0.27
         version: 2.0.27
@@ -3027,6 +3021,7 @@ packages:
     resolution: {integrity: sha512-atdg3ZOOhmK3A87gRRS1mTBp+ljVK0rYaAVAhnrv7GhKTPFDZKo+GkLsXMu5oAka43Wi9iBOXFJeq+xtD1z57w==}
     dependencies:
       wasm-feature-detect: 1.6.1
+    dev: true
 
   /@koozaki/romaji-conv@2.0.27:
     resolution: {integrity: sha512-revFh2p+mK9Xt379QnC4ubw2XrqL6cUJY2U/T9YJHh6uGXty8GbEfdFX4kzXmJOWzsBQORiGgUwrIrJR/3wYdg==}
@@ -9555,6 +9550,7 @@ packages:
 
   /wasm-feature-detect@1.6.1:
     resolution: {integrity: sha512-R1i9ED8UlLu/foILNB1ck9XS63vdtqU/tP1MCugVekETp/ySCrBZRk5I/zI67cI1wlQYeSonNm1PLjDHZDNg6g==}
+    dev: true
 
   /web-worker-manager@0.2.0:
     resolution: {integrity: sha512-WmGabA4GLth1ju9VLm/oMDcPMhMngHoBSdY1OMhrEJvNsPl7z2p+7RBOXjEi5zlP0dK+Shd3Wm+BdD5WZrNYBA==}
