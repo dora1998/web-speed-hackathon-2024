@@ -1,3 +1,4 @@
+import { toKatakana } from '@koozaki/romaji-conv';
 import { eq } from 'drizzle-orm';
 import { HTTPException } from 'hono/http-exception';
 import { err, ok } from 'neverthrow';
@@ -101,7 +102,10 @@ class AuthorRepository implements AuthorRepositoryInterface {
         offset: options.query.offset,
         where(author, { like }) {
           if (options.query.name != null) {
-            return like(author.name, `%${options.query.name}%`);
+            return like(author.name, `%${toKatakana(options.query.name)}%`);
+          }
+          if (options.query.id != null) {
+            return eq(author.id, options.query.id);
           }
           return;
         },

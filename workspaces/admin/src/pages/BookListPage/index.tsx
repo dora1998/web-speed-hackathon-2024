@@ -23,7 +23,6 @@ import _ from 'underscore';
 import { create } from 'zustand';
 
 import { useBookList } from '../../features/books/hooks/useBookList';
-import { isContains } from '../../lib/filter/isContains';
 
 import { BookDetailModal } from './internal/BookDetailModal';
 import { CreateBookModal } from './internal/CreateBookModal';
@@ -64,9 +63,6 @@ type BookModalAction = {
 };
 
 export const BookListPage: React.FC = () => {
-  const { data: bookList = [] } = useBookList();
-  const bookListA11yId = useId();
-
   const formik = useFormik({
     initialValues: {
       kind: BookSearchKind.BookId as BookSearchKind,
@@ -75,37 +71,35 @@ export const BookListPage: React.FC = () => {
     onSubmit() {},
   });
 
-  const filteredBookList = useMemo(() => {
+  const query = useMemo(() => {
     if (formik.values.query === '') {
-      return bookList;
+      return {};
     }
 
     switch (formik.values.kind) {
-      case BookSearchKind.BookId: {
-        return bookList.filter((book) => book.id === formik.values.query);
-      }
-      case BookSearchKind.BookName: {
-        return bookList.filter((book) => {
-          return (
-            isContains({ query: formik.values.query, target: book.name }) ||
-            isContains({ query: formik.values.query, target: book.nameRuby })
-          );
-        });
-      }
-      case BookSearchKind.AuthorId: {
-        return bookList.filter((book) => book.author.id === formik.values.query);
-      }
-      case BookSearchKind.AuthorName: {
-        return bookList.filter((book) => {
-          return isContains({ query: formik.values.query, target: book.author.name });
-        });
-      }
-      default: {
-        formik.values.kind satisfies never;
-        return bookList;
-      }
+      case BookSearchKind.BookId:
+        return {
+          id: formik.values.query,
+        };
+      case BookSearchKind.BookName:
+        return {
+          name: formik.values.query,
+        };
+      case BookSearchKind.AuthorId:
+        return {
+          authorId: formik.values.query,
+        };
+      case BookSearchKind.AuthorName:
+        return {
+          authorName: formik.values.query,
+        };
+      default:
+        return {};
     }
-  }, [formik.values.kind, formik.values.query, bookList]);
+  }, [formik.values.kind, formik.values.query]);
+
+  const { data: bookList = [] } = useBookList({ query });
+  const bookListA11yId = useId();
 
   const [useModalStore] = useState(() => {
     return create<BookModalState & BookModalAction>()((set) => ({
@@ -216,7 +210,7 @@ export const BookListPage: React.FC = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {_.map(filteredBookList, (book) => (
+                {_.map(bookList, (book) => (
                   <Tr key={book.id}>
                     <Td textAlign="center" verticalAlign="middle">
                       <Button colorScheme="teal" onClick={() => modalState.openDetail(book.id)} variant="solid">

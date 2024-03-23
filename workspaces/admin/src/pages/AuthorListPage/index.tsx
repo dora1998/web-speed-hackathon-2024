@@ -23,7 +23,6 @@ import _ from 'underscore';
 import { create } from 'zustand';
 
 import { useAuthorList } from '../../features/authors/hooks/useAuthorList';
-import { isContains } from '../../lib/filter/isContains';
 
 import { AuthorDetailModal } from './internal/AuthorDetailModal';
 import { CreateAuthorModal } from './internal/CreateAuthorModal';
@@ -62,7 +61,6 @@ type AuthorModalAction = {
 };
 
 export const AuthorListPage: React.FC = () => {
-  const { data: authorList = [] } = useAuthorList();
   const authorListA11yId = useId();
 
   const formik = useFormik({
@@ -73,26 +71,21 @@ export const AuthorListPage: React.FC = () => {
     onSubmit() {},
   });
 
-  const filteredAuthorList = useMemo(() => {
+  const query = useMemo(() => {
     if (formik.values.query === '') {
-      return authorList;
+      return {};
     }
 
     switch (formik.values.kind) {
-      case AuthorSearchKind.AuthorId: {
-        return authorList.filter((author) => author.id === formik.values.query);
-      }
-      case AuthorSearchKind.AuthorName: {
-        return authorList.filter((author) => {
-          return isContains({ query: formik.values.query, target: author.name });
-        });
-      }
-      default: {
-        formik.values.kind satisfies never;
-        return authorList;
-      }
+      case AuthorSearchKind.AuthorId:
+        return { id: formik.values.query };
+      case AuthorSearchKind.AuthorName:
+        return { name: formik.values.query };
     }
-  }, [formik.values.kind, formik.values.query, authorList]);
+  }, [formik.values.kind, formik.values.query]);
+  const { data: authorList = [] } = useAuthorList({
+    query,
+  });
 
   const [useModalStore] = useState(() => {
     return create<AuthorModalState & AuthorModalAction>()((set) => ({
@@ -184,7 +177,7 @@ export const AuthorListPage: React.FC = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {_.map(filteredAuthorList, (author) => (
+                {_.map(authorList, (author) => (
                   <Tr key={author.id}>
                     <Td textAlign="center" verticalAlign="middle">
                       <Button colorScheme="teal" onClick={() => modalState.openDetail(author.id)} variant="solid">

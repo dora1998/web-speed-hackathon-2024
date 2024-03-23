@@ -1,9 +1,10 @@
 import { Box, Button, Flex, Image, Stack, StackItem, Text } from '@chakra-ui/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
 import type { GetBookResponse } from '@wsh-2024/schema/src/api/books/GetBookResponse';
 
-import { useBookList } from '../../../../features/books/hooks/useBookList';
+import { bookApiClient } from '../../../../features/books/apiClient/bookApiClient';
 import { useDeleteBook } from '../../../../features/books/hooks/useDeleteBook';
 import { getImageUrl } from '../../../../lib/image/getImageUrl';
 
@@ -14,7 +15,7 @@ type BookDetailContentProps = {
 };
 
 export const BookDetailContent: React.FC<BookDetailContentProps> = ({ book, onCloseDialog, onEdit }) => {
-  const { refetch: refetchBookList } = useBookList();
+  const queryClient = useQueryClient();
   const { mutate: deleteBook } = useDeleteBook();
 
   const handleEditClick = useCallback(() => {
@@ -28,12 +29,14 @@ export const BookDetailContent: React.FC<BookDetailContentProps> = ({ book, onCl
       },
       {
         onSuccess: () => {
-          refetchBookList();
+          queryClient.invalidateQueries({
+            queryKey: bookApiClient.fetchList$$key({ query: {} }).slice(0, -1),
+          });
           onCloseDialog();
         },
       },
     );
-  }, [book, deleteBook, onCloseDialog, refetchBookList]);
+  }, [book.id, deleteBook, onCloseDialog, queryClient]);
 
   return (
     <Box aria-label="作品詳細" as="section">

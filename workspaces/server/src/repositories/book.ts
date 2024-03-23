@@ -1,4 +1,4 @@
-import { toHiragana } from '@koozaki/romaji-conv';
+import { toHiragana, toKatakana } from '@koozaki/romaji-conv';
 import { eq } from 'drizzle-orm';
 import { HTTPException } from 'hono/http-exception';
 import { err, ok } from 'neverthrow';
@@ -99,12 +99,21 @@ class BookRepository implements BookRepositoryInterface {
         orderBy(book, { asc }) {
           return asc(book.createdAt);
         },
-        where(book, { eq, like, or }) {
+        where(book, { eq, inArray, like, or }) {
+          if (options.query.id != null) {
+            return eq(book.id, options.query.id);
+          }
           if (options.query.authorId != null) {
             return eq(book.authorId, options.query.authorId);
           }
           if (options.query.authorName != null) {
-            return like(author.name, `%${options.query.authorName}%`);
+            return inArray(
+              book.authorId,
+              getDatabase()
+                .select({ id: author.id })
+                .from(author)
+                .where(like(author.name, `%${toKatakana(options.query.authorName ?? '')}%`)),
+            );
           }
           if (options.query.name != null) {
             return or(
