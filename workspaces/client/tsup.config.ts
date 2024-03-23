@@ -16,52 +16,61 @@ export default defineConfig(async (): Promise<Options[]> => {
   const SEED_IMAGE_DIR = path.resolve(WORKSPACE_DIR, './workspaces/server/seeds/images');
   const IMAGE_PATH_LIST = fs.readdirSync(SEED_IMAGE_DIR).map((file) => `/images/${file}`);
 
+  const common: Options = {
+    bundle: true,
+    clean: true,
+    env: {
+      API_URL: '',
+      NODE_ENV: process.env['NODE_ENV'] || 'development',
+      PATH_LIST: IMAGE_PATH_LIST.join(',') || '',
+    },
+    esbuildOptions(options) {
+      options.define = {
+        ...options.define,
+        global: 'globalThis',
+      };
+      options.publicPath = '/';
+    },
+    esbuildPlugins: [
+      polyfillNode({
+        globals: {
+          process: false,
+        },
+        polyfills: {
+          events: true,
+          fs: true,
+          path: true,
+        },
+      }),
+    ],
+    format: 'iife',
+    loader: {
+      '.json?file': 'file',
+      '.wasm': 'binary',
+    },
+    metafile: true,
+    minify: true,
+    outDir: OUTPUT_DIR,
+    platform: 'browser',
+    shims: true,
+    sourcemap: true,
+    treeshake: true,
+  };
+
   return [
     {
-      bundle: true,
-      clean: true,
+      ...common,
       entry: {
         client: path.resolve(PACKAGE_DIR, './src/index.tsx'),
+      },
+      target: ['chrome123'],
+    },
+    {
+      ...common,
+      entry: {
         serviceworker: path.resolve(PACKAGE_DIR, './src/serviceworker/index.ts'),
       },
-      env: {
-        API_URL: '',
-        NODE_ENV: process.env['NODE_ENV'] || 'development',
-        PATH_LIST: IMAGE_PATH_LIST.join(',') || '',
-      },
-      esbuildOptions(options) {
-        options.define = {
-          ...options.define,
-          global: 'globalThis',
-        };
-        options.publicPath = '/';
-      },
-      esbuildPlugins: [
-        polyfillNode({
-          globals: {
-            process: false,
-          },
-          polyfills: {
-            events: true,
-            fs: true,
-            path: true,
-          },
-        }),
-      ],
-      format: 'iife',
-      loader: {
-        '.json?file': 'file',
-        '.wasm': 'binary',
-      },
-      metafile: true,
-      minify: false,
-      outDir: OUTPUT_DIR,
-      platform: 'browser',
-      shims: true,
-      sourcemap: 'inline',
-      splitting: false,
       target: ['chrome58', 'firefox57', 'safari11', 'edge18'],
-      treeshake: false,
     },
   ];
 });
