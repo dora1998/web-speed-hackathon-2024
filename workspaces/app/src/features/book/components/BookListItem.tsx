@@ -11,6 +11,7 @@ import { Spacer } from '../../../foundation/components/Spacer';
 import { Text } from '../../../foundation/components/Text';
 import { useImage } from '../../../foundation/hooks/useImage';
 import { Color, Radius, Space, Typography } from '../../../foundation/styles/variables';
+import type { Unpacked } from '../../../lib/types';
 
 const _Wrapper = styled.li`
   width: 100%;
@@ -27,8 +28,6 @@ const _ImgWrapper = styled.div`
     border-radius: ${Radius.SMALL};
   }
 `;
-
-type Unpacked<T> = T extends (infer U)[] ? U : T;
 
 type Props = {
   book: Unpacked<GetBookListResponse>;
