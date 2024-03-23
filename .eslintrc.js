@@ -20,6 +20,7 @@ module.exports = {
       },
     ],
     'no-undefined': 'off',
+    'react/display-name': 'off',
     'react/jsx-sort-props': [
       'error',
       {

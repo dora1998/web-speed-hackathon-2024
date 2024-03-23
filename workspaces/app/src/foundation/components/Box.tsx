@@ -72,7 +72,7 @@ type Props = {
   as?: keyof JSX.IntrinsicElements;
   backgroundColor?: Color;
   bottom?: number;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   color?: Color;
   flexGrow?: CSS.Property.FlexGrow;
   flexShrink?: CSS.Property.FlexShrink;

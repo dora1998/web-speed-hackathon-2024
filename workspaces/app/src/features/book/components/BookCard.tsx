@@ -1,6 +1,8 @@
+import { useInView } from '@react-spring/web';
 import { Suspense } from 'react';
 import { styled } from 'styled-components';
 
+import { Box } from '../../../foundation/components/Box';
 import { Flex } from '../../../foundation/components/Flex';
 import { Image } from '../../../foundation/components/Image';
 import { Link } from '../../../foundation/components/Link';
@@ -19,7 +21,7 @@ const _Wrapper = styled(Link)`
 `;
 
 const _ImgWrapper = styled.div`
-  > img {
+  > * {
     border-radius: ${Radius.SMALL} ${Radius.SMALL} 0 0;
   }
 `;
@@ -27,7 +29,7 @@ const _ImgWrapper = styled.div`
 const _AvatarWrapper = styled.div`
   width: 32px;
   height: 32px;
-  > img {
+  > * {
     border-radius: 50%;
   }
 `;
@@ -43,12 +45,14 @@ const BookCard: React.FC<Props> = ({ bookId }) => {
   const authorImageUrl = useImage({ height: 32, imageId: book.author.image.id, width: 32 });
 
   return (
-    <_Wrapper href={`/books/${bookId}`}>
-      {imageUrl != null && (
-        <_ImgWrapper>
+    <>
+      <_ImgWrapper>
+        {imageUrl != null ? (
           <Image alt={book.image.alt} height={128} objectFit="cover" src={imageUrl} width={192} />
-        </_ImgWrapper>
-      )}
+        ) : (
+          <Box height={128} width={192} />
+        )}
+      </_ImgWrapper>
 
       <Flex align="stretch" direction="column" flexGrow={1} gap={Space * 1} justify="space-between" p={Space * 2}>
         <Text color={Color.MONO_100} typography={Typography.NORMAL14} weight="bold">
@@ -56,25 +60,60 @@ const BookCard: React.FC<Props> = ({ bookId }) => {
         </Text>
 
         <Flex align="center" gap={Space * 1} justify="flex-end">
-          {authorImageUrl != null && (
-            <_AvatarWrapper>
+          <_AvatarWrapper>
+            {authorImageUrl != null ? (
               <Image alt={book.author.name} height={32} objectFit="cover" src={authorImageUrl} width={32} />
-            </_AvatarWrapper>
-          )}
+            ) : (
+              <Box height={32} width={32} />
+            )}
+          </_AvatarWrapper>
           <Text color={Color.MONO_100} typography={Typography.NORMAL12}>
             {book.author.name}
           </Text>
         </Flex>
       </Flex>
-    </_Wrapper>
+    </>
+  );
+};
+
+const Fallback = () => {
+  return (
+    <>
+      <_ImgWrapper>
+        <Box height={128} width={192} />
+      </_ImgWrapper>
+
+      <Flex align="stretch" direction="column" flexGrow={1} gap={Space * 1} justify="space-between" p={Space * 2}>
+        <Text color={Color.MONO_100} typography={Typography.NORMAL14} weight="bold">
+          ...
+        </Text>
+
+        <Flex align="center" gap={Space * 1} justify="flex-end">
+          <_AvatarWrapper>
+            <Box height={32} width={32} />
+          </_AvatarWrapper>
+          <Text color={Color.MONO_100} typography={Typography.NORMAL12}>
+            ...
+          </Text>
+        </Flex>
+      </Flex>
+    </>
   );
 };
 
 const BookCardWithSuspense: React.FC<Props> = (props) => {
+  const [ref, isVisible] = useInView();
+
   return (
-    <Suspense fallback={null}>
-      <BookCard {...props} />
-    </Suspense>
+    <_Wrapper ref={ref} href={`/books/${props.bookId}`}>
+      {isVisible ? (
+        <Suspense fallback={<Fallback />}>
+          <BookCard {...props} />
+        </Suspense>
+      ) : (
+        <Fallback />
+      )}
+    </_Wrapper>
   );
 };
 
