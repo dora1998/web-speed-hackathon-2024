@@ -1,0 +1,7 @@
+{
+  "name": "@wsh-2024/scripts",
+  "private": true,
+  "devDependencies": {
+    "tsx": "4.7.1"
+  }
+}

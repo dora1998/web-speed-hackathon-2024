@@ -1,6 +1,5 @@
 import { Suspense, useCallback, useEffect, useId, useState } from 'react';
 
-import { useBookList } from '../../features/book/hooks/useBookList';
 import { Box } from '../../foundation/components/Box';
 import { Text } from '../../foundation/components/Text';
 import { Color, Space, Typography } from '../../foundation/styles/variables';
