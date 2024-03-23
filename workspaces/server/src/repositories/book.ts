@@ -98,7 +98,7 @@ class BookRepository implements BookRepositoryInterface {
         orderBy(book, { asc }) {
           return asc(book.createdAt);
         },
-        where(book, { eq, like }) {
+        where(book, { eq, like, or }) {
           if (options.query.authorId != null) {
             return eq(book.authorId, options.query.authorId);
           }
@@ -106,7 +106,7 @@ class BookRepository implements BookRepositoryInterface {
             return like(author.name, `%${options.query.authorName}%`);
           }
           if (options.query.name != null) {
-            return like(book.name, `%${options.query.name}%`);
+            return or(like(book.name, `%${options.query.name}%`), like(book.nameRuby, `%${options.query.name}%`));
           }
           return;
         },
