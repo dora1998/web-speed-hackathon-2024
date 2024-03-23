@@ -40,8 +40,8 @@ type Props = {
 const BookCard: React.FC<Props> = ({ bookId }) => {
   const { data: book } = useBook({ params: { bookId } });
 
-  const imageUrl = `/images/${book.image.id}_book_192w.avif`;
-  const authorImageUrl = `/images/${book.author.image.id}.avif`;
+  const imageUrl = `/assets/images/${book.image.id}_book_192w.avif`;
+  const authorImageUrl = `/assets/images/${book.author.image.id}.avif`;
 
   return (
     <>

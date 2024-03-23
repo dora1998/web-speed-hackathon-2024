@@ -36,7 +36,7 @@ const AuthorDetailPage: React.FC = () => {
 
   const { data: author } = useAuthor({ params: { authorId } });
 
-  const imageUrl = `/images/${author.image.id}_large.avif`;
+  const imageUrl = `/assets/images/${author.image.id}_large.avif`;
   const bookListA11yId = useId();
 
   return (

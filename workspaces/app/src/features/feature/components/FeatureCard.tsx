@@ -48,8 +48,8 @@ type Props = {
 };
 
 const FeatureCard: React.FC<Props> = ({ book }) => {
-  const imageUrl = `/images/${book.image.id}_book_96w.avif`;
-  const authorImageUrl = `/images/${book.author.image.id}.avif`;
+  const imageUrl = `/assets/images/${book.image.id}_book_96w.avif`;
+  const authorImageUrl = `/assets/images/${book.author.image.id}.avif`;
 
   return (
     <_Wrapper href={`/books/${book.id}`}>

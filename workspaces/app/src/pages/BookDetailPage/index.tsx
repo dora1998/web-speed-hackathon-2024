@@ -53,8 +53,8 @@ const BookDetailPage: React.FC = () => {
 
   const [isFavorite, toggleFavorite] = useAtom(FavoriteBookAtomFamily(bookId));
 
-  const bookImageUrl = `/images/${book.image.id}_book_256h.avif`;
-  const auhtorImageUrl = `/images/${book.author.image.id}.avif`;
+  const bookImageUrl = `/assets/images/${book.image.id}_book_256h.avif`;
+  const auhtorImageUrl = `/assets/images/${book.author.image.id}.avif`;
 
   const handleFavClick = useCallback(() => {
     toggleFavorite();
