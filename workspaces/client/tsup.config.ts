@@ -21,7 +21,7 @@ export default defineConfig(async (): Promise<Options[]> => {
     clean: true,
     env: {
       API_URL: '',
-      NODE_ENV: process.env['NODE_ENV'] || 'development',
+      NODE_ENV: process.env['NODE_ENV'] || 'production',
       PATH_LIST: IMAGE_PATH_LIST.join(',') || '',
     },
     esbuildOptions(options) {
