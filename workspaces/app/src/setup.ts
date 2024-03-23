@@ -1,3 +1,6 @@
 import { init as ucaInit } from 'unicode-collation-algorithm2';
 
-ucaInit();
+if (typeof window !== 'undefined') {
+  console.log('Initializing UCA...');
+  ucaInit();
+}
