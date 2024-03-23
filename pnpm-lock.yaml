@@ -359,6 +359,9 @@ importers:
       '@jsquash/jxl':
         specifier: 1.1.0
         version: 1.1.0
+      '@koozaki/romaji-conv':
+        specifier: 2.0.27
+        version: 2.0.27
       '@node-kit/pnpm-workspace-root':
         specifier: 3.2.0
         version: 3.2.0
@@ -441,6 +444,9 @@ importers:
       '@types/jsesc':
         specifier: 3.0.3
         version: 3.0.3
+      '@types/koozaki__romaji-conv':
+        specifier: 2.0.2
+        version: 2.0.2
       '@types/node':
         specifier: 20.9.0
         version: 20.9.0
@@ -3025,6 +3031,13 @@ packages:
     dependencies:
       wasm-feature-detect: 1.6.1
 
+  /@koozaki/romaji-conv@2.0.27:
+    resolution: {integrity: sha512-revFh2p+mK9Xt379QnC4ubw2XrqL6cUJY2U/T9YJHh6uGXty8GbEfdFX4kzXmJOWzsBQORiGgUwrIrJR/3wYdg==}
+    hasBin: true
+    dependencies:
+      commander: 12.0.0
+    dev: false
+
   /@mapbox/node-pre-gyp@1.0.9:
     resolution: {integrity: sha512-aDF3S3rK9Q2gey/WAttUlISduDItz5BU3306M9Eyv6/oS40aMprnopshtlKTykxRNIBEZuRMaZAnbrQ4QtKGyw==}
     hasBin: true
@@ -3681,6 +3694,10 @@ packages:
 
   /@types/json5@0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
+    dev: true
+
+  /@types/koozaki__romaji-conv@2.0.2:
+    resolution: {integrity: sha512-XDfLpZ/CYLj08a8FlpEbUj3l4HLnvO5BlKt4OFfx0iXawk10+TEFK1HFHrB1FWYtU5mTWHIlgTx92Wyf+nvDqg==}
     dev: true
 
   /@types/lodash.mergewith@4.6.7:

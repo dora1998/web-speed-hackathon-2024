@@ -1,3 +1,4 @@
+import { toHiragana } from '@koozaki/romaji-conv';
 import { eq } from 'drizzle-orm';
 import { HTTPException } from 'hono/http-exception';
 import { err, ok } from 'neverthrow';
@@ -106,7 +107,10 @@ class BookRepository implements BookRepositoryInterface {
             return like(author.name, `%${options.query.authorName}%`);
           }
           if (options.query.name != null) {
-            return or(like(book.name, `%${options.query.name}%`), like(book.nameRuby, `%${options.query.name}%`));
+            return or(
+              like(book.name, `%${options.query.name}%`),
+              like(book.nameRuby, `%${toHiragana(options.query.name)}%`),
+            );
           }
           return;
         },
