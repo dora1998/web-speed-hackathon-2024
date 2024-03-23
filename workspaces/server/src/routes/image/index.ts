@@ -5,6 +5,7 @@ import path from 'node:path';
 
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
+import { etag } from 'hono/etag';
 import { HTTPException } from 'hono/http-exception';
 import { Image } from 'image-js';
 import { z } from 'zod';
@@ -65,6 +66,7 @@ const app = new Hono();
 
 app.get(
   '/images/:imageFile',
+  etag({ weak: true }),
   zValidator(
     'param',
     z.object({
@@ -126,6 +128,7 @@ app.get(
     });
 
     c.header('Content-Type', IMAGE_MIME_TYPE[resImgFormat]);
+    c.res.headers.set('Cache-Control', 'public, max-age=3600');
     return c.body(resBinary);
   },
 );
