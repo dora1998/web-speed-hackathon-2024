@@ -18,6 +18,7 @@ import {
   Text,
   Textarea,
 } from '@chakra-ui/react';
+import { useInView } from '@react-spring/web';
 import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { useEffect, useRef, useState } from 'react';
@@ -27,6 +28,7 @@ import { encrypt } from '@wsh-2024/image-encrypt/src/encrypt';
 import type { GetBookResponse } from '@wsh-2024/schema/src/api/books/GetBookResponse';
 import type { GetEpisodeResponse } from '@wsh-2024/schema/src/api/episodes/GetEpisodeResponse';
 
+import { Color } from '../../../../../app/src/foundation/styles/variables';
 import { getImageUrl } from '../../../lib/image/getImageUrl';
 import { isSupportedImage } from '../../../lib/image/isSupportedImage';
 import { useCreateEpisode } from '../hooks/useCreateEpisode';
@@ -36,6 +38,37 @@ import { useDeleteEpisodePage } from '../hooks/useDeleteEpisodePage';
 import { useUpdateEpisode } from '../hooks/useUpdateEpisode';
 
 import { ComicPageImage } from './ComicPageImage';
+
+type Unpacked<T> = T extends (infer U)[] ? U : T;
+
+const PageItem: React.FC<{
+  onRequestToDeletePage: (pageId: string) => void;
+  page: Unpacked<GetEpisodeResponse['pages']>;
+}> = ({ onRequestToDeletePage, page }) => {
+  const [ref, isVisible] = useInView();
+
+  return (
+    <StackItem key={page.id} as="li" flexGrow={0} flexShrink={0} position="relative">
+      <CloseButton
+        aria-label="ページを削除"
+        bg="white"
+        boxShadow="md"
+        onClick={() => onRequestToDeletePage(page.id)}
+        position="absolute"
+        right={-4}
+        rounded="full"
+        top={-4}
+      />
+      <Box ref={ref} as="button" display="block">
+        {isVisible ? (
+          <ComicPageImage pageImageId={page.image.id} />
+        ) : (
+          <Box background={Color.MONO_10} height={304} width={216} />
+        )}
+      </Box>
+    </StackItem>
+  );
+};
 
 type Props = {
   book: GetBookResponse;
@@ -201,21 +234,7 @@ export const EpisodeDetailEditor: React.FC<Props> = ({ book, episode }) => {
         >
           {episode != null &&
             episode.pages.map((page) => (
-              <StackItem key={page.id} as="li" flexGrow={0} flexShrink={0} position="relative">
-                <CloseButton
-                  aria-label="ページを削除"
-                  bg="white"
-                  boxShadow="md"
-                  onClick={() => handleRequestToDeletePage(page.id)}
-                  position="absolute"
-                  right={-4}
-                  rounded="full"
-                  top={-4}
-                />
-                <Box as="button" display="block">
-                  <ComicPageImage pageImageId={page.image.id} />
-                </Box>
-              </StackItem>
+              <PageItem key={page.id} onRequestToDeletePage={handleRequestToDeletePage} page={page} />
             ))}
 
           <Flex align="center" as="li" height={264} justify="center">
