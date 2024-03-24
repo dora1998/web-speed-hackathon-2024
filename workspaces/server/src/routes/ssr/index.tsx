@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 
 import { Hono } from 'hono';
+import { etag } from 'hono/etag';
 import { HTTPException } from 'hono/http-exception';
 import jsesc from 'jsesc';
 import moment from 'moment-timezone';
@@ -69,7 +70,7 @@ async function createHTML({
   return content;
 }
 
-app.get('*', async (c) => {
+app.get('*', etag({ weak: true }), async (c) => {
   const injectData = await createInjectDataStr();
   const sheet = new ServerStyleSheet();
 
@@ -85,6 +86,7 @@ app.get('*', async (c) => {
     const styleTags = sheet.getStyleTags();
     const html = await createHTML({ body, injectData, styleTags });
 
+    c.res.headers.set('Cache-Control', 'public, max-age=60');
     return c.html(html);
   } catch (cause) {
     throw new HTTPException(500, { cause, message: 'SSR error.' });
