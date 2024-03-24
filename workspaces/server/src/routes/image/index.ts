@@ -98,6 +98,7 @@ app.get(
     if (existsSync(editedFilePath)) {
       // 画像変換せずにそのまま返す
       c.header('Content-Type', IMAGE_MIME_TYPE[resImgFormat]);
+      c.res.headers.set('Cache-Control', 'public, max-age=3600');
       return c.body(createStreamBody(createReadStream(editedFilePath)));
     }
 
@@ -116,6 +117,7 @@ app.get(
     if (resImgFormat === origImgFormat && c.req.valid('query').width == null && c.req.valid('query').height == null) {
       // 画像変換せずにそのまま返す
       c.header('Content-Type', IMAGE_MIME_TYPE[resImgFormat]);
+      c.res.headers.set('Cache-Control', 'public, max-age=3600');
       return c.body(createStreamBody(createReadStream(origFilePath)));
     }
 
