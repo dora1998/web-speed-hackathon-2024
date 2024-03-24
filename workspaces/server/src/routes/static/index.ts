@@ -11,7 +11,7 @@ const app = new Hono();
 
 const staticCacheMiddleware = createMiddleware(async (c, next) => {
   await next();
-  c.res.headers.set('Cache-Control', 'public, max-age=0');
+  c.res.headers.set('Cache-Control', 'public, max-age=0, s-maxage=3600');
 });
 
 app.use('/assets/*', staticCacheMiddleware);

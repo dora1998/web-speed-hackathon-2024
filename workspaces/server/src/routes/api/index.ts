@@ -1,5 +1,6 @@
 import { swaggerUI } from '@hono/swagger-ui';
 import { OpenAPIHono } from '@hono/zod-openapi';
+import { cors } from 'hono/cors';
 
 import { authApp } from './auth';
 import { authorApp } from './authors';
@@ -25,6 +26,16 @@ app.get(
   '/api/v1',
   swaggerUI({
     url: '/api/v1/specification',
+  }),
+);
+
+app.use(
+  cors({
+    allowHeaders: ['Content-Type', 'Accept-Encoding', 'X-Accept-Encoding', 'Authorization'],
+    allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    credentials: true,
+    exposeHeaders: ['Content-Encoding', 'X-Content-Encoding'],
+    origin: (origin) => origin,
   }),
 );
 

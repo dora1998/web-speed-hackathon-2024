@@ -10,7 +10,6 @@
     "start:inspect": "node --inspect ./dist/server.js"
   },
   "dependencies": {
-    "@hapi/accept": "6.0.3",
     "@hono/node-server": "1.8.2",
     "@hono/swagger-ui": "0.2.1",
     "@hono/zod-openapi": "0.9.8",
@@ -18,7 +17,6 @@
     "@jsquash/jxl": "1.1.0",
     "@koozaki/romaji-conv": "2.0.27",
     "@node-kit/pnpm-workspace-root": "3.2.0",
-    "@oneidentity/zstd-js": "1.0.3",
     "@wsh-2024/app": "workspace:*",
     "@wsh-2024/schema": "workspace:*",
     "bcryptjs": "2.4.3",

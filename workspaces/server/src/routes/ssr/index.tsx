@@ -86,7 +86,7 @@ app.get('*', etag({ weak: true }), async (c) => {
     const styleTags = sheet.getStyleTags();
     const html = await createHTML({ body, injectData: {}, styleTags });
 
-    c.res.headers.set('Cache-Control', 'public, max-age=60');
+    c.res.headers.set('Cache-Control', 'public, max-age=0');
     return c.html(html);
   } catch (cause) {
     throw new HTTPException(500, { cause, message: 'SSR error.' });
