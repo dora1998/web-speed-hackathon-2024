@@ -18,13 +18,7 @@ export const LoginContent: React.FC = () => {
       login.mutate({ email: values.email, password: values.password });
     },
     validationSchema: yup.object().shape({
-      email: yup
-        .string()
-        .required('メールアドレスを入力してください')
-        .test({
-          message: 'メールアドレスには @ を含めてください',
-          test: (v) => /^(?:[^@]*){12,}$/v.test(v) === false,
-        }),
+      email: yup.string().required('メールアドレスを入力してください').email('メールアドレスには @ を含めてください'),
       password: yup
         .string()
         .required('パスワードを入力してください')
