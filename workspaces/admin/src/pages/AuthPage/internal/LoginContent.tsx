@@ -24,7 +24,7 @@ export const LoginContent: React.FC = () => {
         .required('パスワードを入力してください')
         .test({
           message: 'パスワードには記号を含めてください',
-          test: (v) => /^(?:[^\P{Letter}&&\P{Number}]*){24,}$/v.test(v) === false,
+          test: (v) => /^(?:[^\P{Letter}&&\P{Number}]*)$/v.test(v) === false,
         }),
     }),
   });
