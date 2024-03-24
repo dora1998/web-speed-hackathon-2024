@@ -60,8 +60,8 @@ export const BookEditContent: React.FC<BookEditContentProps> = ({ book, onEditCo
       image: yup
         .mixed((image): image is File => image instanceof File)
         .optional()
-        .test('is-supported-image', '対応していない画像形式です', async (image) => {
-          return image == null || (await isSupportedImage(image));
+        .test('is-supported-image', '対応していない画像形式です', (image) => {
+          return image == null || isSupportedImage(image);
         }),
       name: yup.string().required('作品名を入力してください'),
       nameRuby: yup
