@@ -1,15 +1,14 @@
-import { useInView } from '@react-spring/web';
-import { Suspense } from 'react';
 import { styled } from 'styled-components';
 
-import { Box } from '../../../foundation/components/Box';
+import type { GetReleaseResponse } from '@wsh-2024/schema/src/api/releases/GetReleaseResponse';
+
 import { Flex } from '../../../foundation/components/Flex';
 import { Image } from '../../../foundation/components/Image';
 import { Link } from '../../../foundation/components/Link';
 import { Text } from '../../../foundation/components/Text';
 import { Color, Radius, Space, Typography } from '../../../foundation/styles/variables';
 import { getImageUrl } from '../../../lib/image/getImageUrl';
-import { useBook } from '../hooks/useBook';
+import type { Unpacked } from '../../../lib/types';
 
 const _Wrapper = styled(Link)`
   display: flex;
@@ -35,12 +34,10 @@ const _AvatarWrapper = styled.div`
 `;
 
 type Props = {
-  bookId: string;
+  book: Unpacked<GetReleaseResponse['books']>;
 };
 
-const BookCard: React.FC<Props> = ({ bookId }) => {
-  const { data: book } = useBook({ params: { bookId } });
-
+const BookCard: React.FC<Props> = ({ book }) => {
   const imageUrl = getImageUrl({
     format: 'avif',
     height: 128,
@@ -53,13 +50,9 @@ const BookCard: React.FC<Props> = ({ bookId }) => {
   });
 
   return (
-    <>
+    <_Wrapper href={`/books/${book.id}`}>
       <_ImgWrapper>
-        {imageUrl != null ? (
-          <Image alt={book.image.alt} height={128} objectFit="cover" src={imageUrl} width={192} />
-        ) : (
-          <Box height={128} width={192} />
-        )}
+        <Image alt={book.image.alt} height={128} loading="lazy" objectFit="cover" src={imageUrl} width={192} />
       </_ImgWrapper>
 
       <Flex align="stretch" direction="column" flexGrow={1} gap={Space * 1} justify="space-between" p={Space * 2}>
@@ -69,60 +62,22 @@ const BookCard: React.FC<Props> = ({ bookId }) => {
 
         <Flex align="center" gap={Space * 1} justify="flex-end">
           <_AvatarWrapper>
-            {authorImageUrl != null ? (
-              <Image alt={book.author.name} height={32} objectFit="cover" src={authorImageUrl} width={32} />
-            ) : (
-              <Box height={32} width={32} />
-            )}
+            <Image
+              alt={book.author.name}
+              height={32}
+              loading="lazy"
+              objectFit="cover"
+              src={authorImageUrl}
+              width={32}
+            />
           </_AvatarWrapper>
           <Text color={Color.MONO_100} typography={Typography.NORMAL12}>
             {book.author.name}
           </Text>
         </Flex>
       </Flex>
-    </>
-  );
-};
-
-const Fallback = () => {
-  return (
-    <>
-      <_ImgWrapper>
-        <Box height={128} width={192} />
-      </_ImgWrapper>
-
-      <Flex align="stretch" direction="column" flexGrow={1} gap={Space * 1} justify="space-between" p={Space * 2}>
-        <Text color={Color.MONO_100} typography={Typography.NORMAL14} weight="bold">
-          ...
-        </Text>
-
-        <Flex align="center" gap={Space * 1} justify="flex-end">
-          <_AvatarWrapper>
-            <Box height={32} width={32} />
-          </_AvatarWrapper>
-          <Text color={Color.MONO_100} typography={Typography.NORMAL12}>
-            ...
-          </Text>
-        </Flex>
-      </Flex>
-    </>
-  );
-};
-
-const BookCardWithSuspense: React.FC<Props> = (props) => {
-  const [ref, isVisible] = useInView();
-
-  return (
-    <_Wrapper ref={ref} href={`/books/${props.bookId}`}>
-      {isVisible ? (
-        <Suspense fallback={<Fallback />}>
-          <BookCard {...props} />
-        </Suspense>
-      ) : (
-        <Fallback />
-      )}
     </_Wrapper>
   );
 };
 
-export { BookCardWithSuspense as BookCard };
+export { BookCard };

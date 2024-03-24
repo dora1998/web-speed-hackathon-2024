@@ -131,55 +131,10 @@ class EpisodeRepository implements EpisodeRepositoryInterface {
           return eq(episode.bookId, options.query.bookId);
         },
         with: {
-          book: {
-            columns: {
-              description: true,
-              id: true,
-              name: true,
-              nameRuby: true,
-            },
-            with: {
-              author: {
-                columns: {
-                  description: true,
-                  id: true,
-                  name: true,
-                },
-                with: {
-                  image: {
-                    columns: {
-                      alt: true,
-                      id: true,
-                    },
-                  },
-                },
-              },
-              image: {
-                columns: {
-                  alt: true,
-                  id: true,
-                },
-              },
-            },
-          },
           image: {
             columns: {
               alt: true,
               id: true,
-            },
-          },
-          pages: {
-            columns: {
-              id: true,
-              page: true,
-            },
-            with: {
-              image: {
-                columns: {
-                  alt: true,
-                  id: true,
-                },
-              },
             },
           },
         },

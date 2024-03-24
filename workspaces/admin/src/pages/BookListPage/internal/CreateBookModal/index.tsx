@@ -35,7 +35,7 @@ type Props = {
 };
 
 export const CreateBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
-  const { data: authorList = [] } = useAuthorList();
+  const { data: authorList = [] } = useAuthorList({ query: {} });
   const { data: releaseList = [] } = useReleaseList();
 
   const { mutate: createBook } = useCreateBook();
