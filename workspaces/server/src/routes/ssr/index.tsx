@@ -4,7 +4,6 @@ import { Hono } from 'hono';
 import { etag } from 'hono/etag';
 import { HTTPException } from 'hono/http-exception';
 import jsesc from 'jsesc';
-import moment from 'moment-timezone';
 import ReactDOMServer from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom/server';
 import { ServerStyleSheet } from 'styled-components';
@@ -20,11 +19,12 @@ import { INDEX_HTML_PATH } from '../../constants/paths';
 
 const app = new Hono();
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function createInjectDataStr(): Promise<Record<string, unknown>> {
   const json: Record<string, unknown> = {};
 
   {
-    const dayOfWeek = getDayOfWeekStr(moment());
+    const dayOfWeek = getDayOfWeekStr(new Date());
     const releases = await releaseApiClient.fetch({ params: { dayOfWeek } });
     json[unstable_serialize(releaseApiClient.fetch$$key({ params: { dayOfWeek } }))] = releases;
   }
@@ -71,7 +71,7 @@ async function createHTML({
 }
 
 app.get('*', etag({ weak: true }), async (c) => {
-  const injectData = await createInjectDataStr();
+  // const injectData = await createInjectDataStr();
   const sheet = new ServerStyleSheet();
 
   try {
@@ -84,7 +84,7 @@ app.get('*', etag({ weak: true }), async (c) => {
     );
 
     const styleTags = sheet.getStyleTags();
-    const html = await createHTML({ body, injectData, styleTags });
+    const html = await createHTML({ body, injectData: {}, styleTags });
 
     c.res.headers.set('Cache-Control', 'public, max-age=60');
     return c.html(html);
