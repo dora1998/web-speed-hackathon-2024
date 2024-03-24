@@ -8,6 +8,7 @@ import { Image } from '../../../foundation/components/Image';
 import { Link } from '../../../foundation/components/Link';
 import { Text } from '../../../foundation/components/Text';
 import { Color, Radius, Space, Typography } from '../../../foundation/styles/variables';
+import { getImageUrl } from '../../../lib/image/getImageUrl';
 import { useBook } from '../hooks/useBook';
 
 const _Wrapper = styled(Link)`
@@ -40,8 +41,16 @@ type Props = {
 const BookCard: React.FC<Props> = ({ bookId }) => {
   const { data: book } = useBook({ params: { bookId } });
 
-  const imageUrl = `/assets/images/${book.image.id}_book_192w.avif`;
-  const authorImageUrl = `/assets/images/${book.author.image.id}.avif`;
+  const imageUrl = getImageUrl({
+    format: 'avif',
+    height: 128,
+    imageId: book.image.id,
+    width: 192,
+  });
+  const authorImageUrl = getImageUrl({
+    format: 'avif',
+    imageId: book.author.image.id,
+  });
 
   return (
     <>

@@ -1,5 +1,5 @@
-import { createReadStream } from 'node:fs';
 import type { ReadStream } from 'node:fs';
+import { createReadStream, existsSync } from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
@@ -88,6 +88,20 @@ app.get(
     if (!isSupportedImageFormat(resImgFormat)) {
       throw new HTTPException(501, { message: `Image format: ${resImgFormat} is not supported.` });
     }
+
+    const { height, width } = c.req.valid('query');
+    const editedFilePath = path.resolve(
+      IMAGES_PATH,
+      (width == null && height == null ? reqImgId : `${reqImgId}_${Math.max(width ?? 0, height ?? 0)}`) +
+        `.${resImgFormat}`,
+    );
+    if (existsSync(editedFilePath)) {
+      // 画像変換せずにそのまま返す
+      c.header('Content-Type', IMAGE_MIME_TYPE[resImgFormat]);
+      return c.body(createStreamBody(createReadStream(editedFilePath)));
+    }
+
+    console.warn(`cannot use edited file: ${editedFilePath}`);
 
     const origFileGlob = [path.resolve(IMAGES_PATH, `${reqImgId}`), path.resolve(IMAGES_PATH, `${reqImgId}.*`)];
     const [origFilePath] = await globby(origFileGlob, { absolute: true, onlyFiles: true });

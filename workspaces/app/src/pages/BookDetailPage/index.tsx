@@ -17,6 +17,7 @@ import { Separator } from '../../foundation/components/Separator';
 import { Spacer } from '../../foundation/components/Spacer';
 import { Text } from '../../foundation/components/Text';
 import { Color, Space, Typography } from '../../foundation/styles/variables';
+import { getImageUrl } from '../../lib/image/getImageUrl';
 
 import { BottomNavigator } from './internal/BottomNavigator';
 
@@ -53,8 +54,16 @@ const BookDetailPage: React.FC = () => {
 
   const [isFavorite, toggleFavorite] = useAtom(FavoriteBookAtomFamily(bookId));
 
-  const bookImageUrl = `/assets/images/${book.image.id}_book_256h.avif`;
-  const auhtorImageUrl = `/assets/images/${book.author.image.id}.avif`;
+  const bookImageUrl = getImageUrl({
+    format: 'avif',
+    height: 256,
+    imageId: book.image.id,
+    width: 192,
+  });
+  const authorImageUrl = getImageUrl({
+    format: 'avif',
+    imageId: book.author.image.id,
+  });
 
   const handleFavClick = useCallback(() => {
     toggleFavorite();
@@ -82,11 +91,9 @@ const BookDetailPage: React.FC = () => {
           <Spacer height={Space * 1} />
 
           <_AuthorWrapper href={`/authors/${book.author.id}`}>
-            {auhtorImageUrl != null && (
-              <_AvatarWrapper>
-                <Image alt={book.author.name} height={32} objectFit="cover" src={auhtorImageUrl} width={32} />
-              </_AvatarWrapper>
-            )}
+            <_AvatarWrapper>
+              <Image alt={book.author.name} height={32} objectFit="cover" src={authorImageUrl} width={32} />
+            </_AvatarWrapper>
             <Text color={Color.MONO_100} typography={Typography.NORMAL14}>
               {book.author.name}
             </Text>

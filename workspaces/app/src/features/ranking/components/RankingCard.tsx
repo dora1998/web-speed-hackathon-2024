@@ -11,6 +11,7 @@ import { Separator } from '../../../foundation/components/Separator';
 import { Spacer } from '../../../foundation/components/Spacer';
 import { Text } from '../../../foundation/components/Text';
 import { Color, Radius, Space, Typography } from '../../../foundation/styles/variables';
+import { getImageUrl } from '../../../lib/image/getImageUrl';
 import type { Unpacked } from '../../../lib/types';
 
 const _Wrapper = styled.li`
@@ -42,8 +43,16 @@ type Props = {
 };
 
 const RankingCard: React.FC<Props> = ({ book }) => {
-  const imageUrl = `/assets/images/${book.image.id}_book_96w.avif`;
-  const authorImageUrl = `/assets/images/${book.author.image.id}.avif`;
+  const imageUrl = getImageUrl({
+    format: 'avif',
+    height: 96,
+    imageId: book.image.id,
+    width: 96,
+  });
+  const authorImageUrl = getImageUrl({
+    format: 'avif',
+    imageId: book.author.image.id,
+  });
 
   return (
     <_Wrapper>

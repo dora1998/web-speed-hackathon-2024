@@ -29,7 +29,7 @@ export const avifConverter: ConverterInterface = {
         width: data.width,
       },
     })
-      .avif({ effort: 9 })
+      .avif({ effort: 4 })
       .toBuffer();
   },
 };

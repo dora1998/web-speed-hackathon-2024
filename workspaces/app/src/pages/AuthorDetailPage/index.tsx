@@ -13,6 +13,7 @@ import { Separator } from '../../foundation/components/Separator';
 import { Spacer } from '../../foundation/components/Spacer';
 import { Text } from '../../foundation/components/Text';
 import { Color, Space, Typography } from '../../foundation/styles/variables';
+import { getImageUrl } from '../../lib/image/getImageUrl';
 
 const _HeadingWrapper = styled.section`
   display: grid;
@@ -36,7 +37,12 @@ const AuthorDetailPage: React.FC = () => {
 
   const { data: author } = useAuthor({ params: { authorId } });
 
-  const imageUrl = `/assets/images/${author.image.id}_large.avif`;
+  const imageUrl = getImageUrl({
+    format: 'avif',
+    height: 128,
+    imageId: author.image.id,
+    width: 128,
+  });
   const bookListA11yId = useId();
 
   return (

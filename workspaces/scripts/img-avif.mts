@@ -1,20 +1,24 @@
+import fsOld from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import cliProgress from 'cli-progress';
 import { globby } from 'globby';
 import { Image } from 'image-js';
 import sharp from 'sharp';
 
 import authors from '../server/seeds/author.json';
 import books from '../server/seeds/book.json';
+import episodes from '../server/seeds/episode.json';
+import episodePages from '../server/seeds/episodePage.json';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const IMAGE_DIR = path.join(__dirname, '../server/seeds/images');
 
-const convert = async (imageId: string, suffix: string, size: { height: number; width: number }) => {
+const convert = async (imageId: string, size: number | null) => {
   const origFileGlob = [path.resolve(IMAGE_DIR, `${imageId}`), path.resolve(IMAGE_DIR, `${imageId}.*`)];
   const [origFilePath] = await globby(origFileGlob, { absolute: true, onlyFiles: true });
   if (origFilePath == null) {
@@ -22,6 +26,20 @@ const convert = async (imageId: string, suffix: string, size: { height: number; 
   }
 
   const origBinary = await fs.readFile(origFilePath);
+  const suffix = size != null ? `_${size}` : '';
+
+  const outputPath = path.join(IMAGE_DIR, `${imageId}${suffix}.avif`);
+
+  if (fsOld.existsSync(outputPath)) {
+    return;
+  }
+
+  if (size == null) {
+    const res = await sharp(origBinary).avif({ effort: 4 }).toBuffer();
+    fs.writeFile(outputPath, res);
+    return;
+  }
+
   const image = new Image(
     await sharp(origBinary)
       .ensureAlpha()
@@ -39,7 +57,7 @@ const convert = async (imageId: string, suffix: string, size: { height: number; 
       }),
   );
 
-  const scale = Math.max((size.width ?? 0) / image.width, (size.height ?? 0) / image.height) || 1;
+  const scale = Math.max((size * 3 ?? 0) / image.width, (size * 3 ?? 0) / image.height) || 1;
   const manipulated = image.resize({
     height: Math.ceil(image.height * scale),
     preserveAspectRatio: true,
@@ -53,50 +71,43 @@ const convert = async (imageId: string, suffix: string, size: { height: number; 
       width: manipulated.width,
     },
   })
-    .avif({ effort: 9 })
+    .avif({ effort: 4 })
     .toBuffer();
 
   fs.writeFile(path.join(IMAGE_DIR, `${imageId}${suffix}.avif`), res);
 };
 
+const convertAll = async (items: string[], sizes: (number | null)[]) => {
+  // create a new progress bar instance and use shades_classic theme
+  const bar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+
+  // start the progress bar with a total value of 200 and start value of 0
+  bar.start(items.length, 0);
+
+  // update the current value in your application..
+  await Promise.all(
+    items.map(async (imageId) => {
+      await Promise.all(sizes.map((size) => convert(imageId, size)));
+      bar.increment();
+    }),
+  );
+
+  // stop the progress bar
+  bar.stop();
+};
+
 console.log('----- Author -----');
 
-await Promise.all(
-  Array.from(new Set(authors.map((a) => a.imageId))).map(async (imageId) => {
-    console.log(`Converting ${imageId}...`);
-    await convert(imageId, '', {
-      height: 32 * 3,
-      width: 32 * 3,
-    });
-    await convert(imageId, '_large', {
-      height: 128 * 3,
-      width: 128 * 3,
-    });
-    console.log(`Converted ${imageId}!`);
-  }),
-);
+await convertAll(Array.from(new Set(authors.map((a) => a.imageId))), [32, 128]);
 
 console.log('----- Book -----');
 
-await Promise.all(
-  Array.from(new Set(books.map((b) => b.imageId))).map(async (imageId) => {
-    console.log(`Converting ${imageId}...`);
-    await convert(imageId, '_book', {
-      height: 64 * 3,
-      width: 64 * 3,
-    });
-    await convert(imageId, '_book_96w', {
-      height: 96 * 3,
-      width: 96 * 3,
-    });
-    await convert(imageId, '_book_192w', {
-      height: 128 * 3,
-      width: 192 * 3,
-    });
-    await convert(imageId, '_book_256h', {
-      height: 256 * 3,
-      width: 192 * 3,
-    });
-    console.log(`Converted ${imageId}!`);
-  }),
-);
+await convertAll(Array.from(new Set(books.map((a) => a.imageId))), [64, 96, 192, 256]);
+
+console.log('----- Episode -----');
+
+await convertAll(Array.from(new Set(episodes.map((a) => a.imageId))), [96]);
+
+console.log('----- Episode Page -----');
+
+await convertAll(Array.from(new Set(episodePages.map((a) => a.imageId))), [null]);

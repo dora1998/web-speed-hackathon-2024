@@ -320,6 +320,12 @@ importers:
 
   workspaces/scripts:
     devDependencies:
+      '@types/cli-progress':
+        specifier: 3.11.5
+        version: 3.11.5
+      cli-progress:
+        specifier: 3.12.0
+        version: 3.12.0
       globby:
         specifier: 14.0.1
         version: 14.0.1

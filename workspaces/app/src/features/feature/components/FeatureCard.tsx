@@ -7,6 +7,7 @@ import { Image } from '../../../foundation/components/Image';
 import { Link } from '../../../foundation/components/Link';
 import { Text } from '../../../foundation/components/Text';
 import { Color, Radius, Space, Typography } from '../../../foundation/styles/variables';
+import { getImageUrl } from '../../../lib/image/getImageUrl';
 import type { Unpacked } from '../../../lib/types';
 
 const _Wrapper = styled(Link)`
@@ -48,8 +49,16 @@ type Props = {
 };
 
 const FeatureCard: React.FC<Props> = ({ book }) => {
-  const imageUrl = `/assets/images/${book.image.id}_book_96w.avif`;
-  const authorImageUrl = `/assets/images/${book.author.image.id}.avif`;
+  const imageUrl = getImageUrl({
+    format: 'avif',
+    height: 96,
+    imageId: book.image.id,
+    width: 96,
+  });
+  const authorImageUrl = getImageUrl({
+    format: 'avif',
+    imageId: book.author.image.id,
+  });
 
   return (
     <_Wrapper href={`/books/${book.id}`}>
