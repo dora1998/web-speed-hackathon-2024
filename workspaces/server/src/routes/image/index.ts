@@ -65,14 +65,8 @@ const IMAGE_CONVERTER: Record<SupportedImageExtension, ConverterInterface> = {
 const app = new Hono();
 
 app.get(
-  '/images/:imageFile',
+  '/images/:imageFile{[a-f0-9-]+(\\.[a-z]+)?}',
   etag({ weak: true }),
-  zValidator(
-    'param',
-    z.object({
-      imageFile: z.string().regex(/^[a-f0-9-]+(?:\.\w*)?$/),
-    }),
-  ),
   zValidator(
     'query',
     z.object({
@@ -84,7 +78,7 @@ app.get(
   async (c) => {
     const { globby } = await import('globby');
 
-    const { ext: reqImgExt, name: reqImgId } = path.parse(c.req.valid('param').imageFile);
+    const { ext: reqImgExt, name: reqImgId } = path.parse(c.req.param('imageFile'));
 
     const resImgFormat = c.req.valid('query').format ?? reqImgExt.slice(1);
 
